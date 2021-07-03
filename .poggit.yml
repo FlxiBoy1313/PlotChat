@@ -1,0 +1,8 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/FlxiBoy1313/PlotChat
+build-by-default: true
+branches:
+- main
+projects:
+  PlotChat:
+    path: ""
+...
