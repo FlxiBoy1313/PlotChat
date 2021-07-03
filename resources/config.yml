@@ -1,0 +1,42 @@
+############################
+############################
+####                                           ####
+####   Chat addon for MyPlot   ####
+####                                           ####
+############################
+############################
+
+# settings
+settings:
+  cmd:
+    enable: true
+    command: "chat"
+    desc: "PlotChat command"
+    usage: "§cUse: /chat <message>"
+    aliases: "pchat"
+  see-chat:
+    # modes
+    # - "permission" => all peoples with a permisson
+    # - "players" => all peoples in the player list
+    # - "false" => disable this feauture
+    mode: "permission"
+    # if mode: permission
+    mode-perms: "chat.see"
+    # if mode: players
+    mode-players:
+      - "Player1"
+      - "Player2"
+
+# messages
+message:
+  prefix: "§6PlotChat §8» "
+  cmd:
+    no-plot: "§cYou are not standing inside a plot."
+    no-world: "§cYou are not in a plot world."
+    # formats
+    #  - %x% => see the plot position x
+    #  - %z% => see the plot position z
+    #  - %player% => see the player name
+    #  - %msg% => see the player message
+    chat-msg: "§6PlotChat §8| §7[§6%x%§8;§6%z%§7] §e%player% §8» §f%msg%"
+    # Standart design: "PlotChat | [0;0] Player » Test"
