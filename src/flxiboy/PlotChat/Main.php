@@ -26,5 +26,8 @@ class Main extends PluginBase
         } else {
             $this->getLogger()->warning("Please install MyPlot!");
         }
+        if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
+            $this->getLogger()->warning("Please install FormAPI!");
+        }
     }
 }

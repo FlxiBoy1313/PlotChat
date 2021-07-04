@@ -6,7 +6,7 @@
 ############################
 ############################
 
-# settings
+# settings, edit the settings of PlotChat
 settings:
   cmd:
     enable: true
@@ -15,7 +15,7 @@ settings:
     usage: "§cUse: /chat <message>"
     aliases: "pchat"
   see-chat:
-    # modes
+    # modes:
     # - "permission" => all peoples with a permisson
     # - "players" => all peoples in the player list
     # - "false" => disable this feauture
@@ -26,17 +26,25 @@ settings:
     mode-players:
       - "Player1"
       - "Player2"
+  ui:
+    enable: true
+    # this is there when you do '/chat ui' that opens the UI.
+    cmd: "ui"
 
-# messages
+# messages, edit the message in the chat
 message:
   prefix: "§6PlotChat §8» "
   cmd:
     no-plot: "§cYou are not standing inside a plot."
     no-world: "§cYou are not in a plot world."
-    # formats
+    # formats:
     #  - %x% => see the plot position x
     #  - %z% => see the plot position z
     #  - %player% => see the player name
     #  - %msg% => see the player message
     chat-msg: "§6PlotChat §8| §7[§6%x%§8;§6%z%§7] §e%player% §8» §f%msg%"
     # Standart design: "PlotChat | [0;0] Player » Test"
+  ui:
+    title: "§6PlotChat"
+    text: "§r\n§7Please send a PlotChat message."
+    input: "§7Here..."

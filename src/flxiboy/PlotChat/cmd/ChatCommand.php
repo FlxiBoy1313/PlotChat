@@ -43,6 +43,7 @@ class ChatCommand extends PluginCommand
 	 */
     public function execute(CommandSender $player, string $alias, array $args) 
     {
+        $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
         $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
         if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
@@ -53,15 +54,46 @@ class ChatCommand extends PluginCommand
             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
             return;
         }
-        if (!empty($args[0])) {
-            $text = implode(" ", $args);
+        if (isset($args[0])) {
+            if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
+                if (!$api) {
+                    return;
+                }
+                $form = $api->createCustomForm(function (Player $player, $data = null) { 
+                    if ($data === null) {
+                        return; 
+                    }
+                    $this->sendChat($player, $data[0]);
+                });
+                $form->setTitle($config->getNested("message.ui.title"));
+                $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
+                $form->sendToPlayer($player);
+                return $form;
+            } else {
+                $text = implode(" ", $args);
+                $this->sendChat($player, $text);
+            }
+        } else {
+            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+        }
+        return true;
+    }
+
+    /**
+	 * @param Player $player
+	 * @param string $message
+	 */
+    public function sendChat(Player $player, string $message) {
+        $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
+        $plot = MyPlot::getInstance()->getPlotByPosition($player);
+        if (!empty($message)) {
             foreach (Server::getInstance()->getOnlinePlayers() as $players) {
                 $plotx = MyPlot::getInstance()->getPlotByPosition($players);
                 $msg = $config->getNested("message.cmd.chat-msg");
                 $msg = str_replace("%x%", $plot->X, $msg);
                 $msg = str_replace("%z%", $plot->Z, $msg);
                 $msg = str_replace("%player%", $player->getName(), $msg);
-                $msg = str_replace("%msg%", $text, $msg);
+                $msg = str_replace("%msg%", $message, $msg);
                 if ($plot !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
                     if ($players == $player->getName()) {
                         $player->sendMessage($msg);
@@ -91,6 +123,5 @@ class ChatCommand extends PluginCommand
         } else {
             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
         }
-        return true;
     }
 }
