@@ -15,6 +15,7 @@ settings:
     usage: "§cUse: /chat <message>"
     aliases: "pchat"
   see-chat:
+    msg: "§8[§cAdmin§8] "
     # modes:
     # - "permission" => all peoples with a permisson
     # - "players" => all peoples in the player list

@@ -94,7 +94,7 @@ class ChatCommand extends PluginCommand
                 $msg = str_replace("%z%", $plot->Z, $msg);
                 $msg = str_replace("%player%", $player->getName(), $msg);
                 $msg = str_replace("%msg%", $message, $msg);
-                if ($plot !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
+                if ($plotx !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
                     if ($players == $player->getName()) {
                         $player->sendMessage($msg);
                     } else{
@@ -106,16 +106,17 @@ class ChatCommand extends PluginCommand
                             foreach ($config->getNested("settings.see-chat.mode-players") as $chatp) {
                                 if ($chatp instanceof Player) {
                                     if ($chatp->hasPermission() == $config->getNested("settings.see-chat.mode-perms")) {
-                                        $chatp->sendMessage($msg);
+                                        $chatp->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
                                     }
                                 }
                             }
                         } elseif ($config->getNested("settings.see-chat.mode") == "permission") {
                             if ($players->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
-                                $players->sendMessage($msg);
+                                $players->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
                             }
+                        } elseif ($config->getNested("settings.see-chat.mode") == "false") {
                         } else {
-                            $players->sendMessage($msg);
+                            Main::getInstance()->getLogger()->warning("please change the settings -> mode. use players, permission or false!");
                         }
                     } 
                 }
