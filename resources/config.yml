@@ -45,6 +45,7 @@ message:
     #  - %msg% => see the player message
     chat-msg: "§6PlotChat §8| §7[§6%x%§8;§6%z%§7] §e%player% §8» §f%msg%"
     # Standart design: "PlotChat | [0;0] Player » Test"
+    # Standart design Admin: "[Admin] PlotChat | [0;0] Player » Test"
   ui:
     title: "§6PlotChat"
     text: "§r\n§7Please send a PlotChat message."
