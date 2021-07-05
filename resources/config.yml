@@ -31,6 +31,12 @@ settings:
     enable: true
     # this is there when you do '/chat ui' that opens the UI.
     cmd: "ui"
+  chat:
+  # If this true, then only '/chat <on/off>' works. 
+    enable: false
+    cmd-on: "on"
+    cmd-off: "off"
+    usage: "§cUse: /chat <on, off>"
 
 # messages, edit the message in the chat
 message:
@@ -46,6 +52,9 @@ message:
     chat-msg: "§6PlotChat §8| §7[§6%x%§8;§6%z%§7] §e%player% §8» §f%msg%"
     # Standart design: "PlotChat | [0;0] Player » Test"
     # Standart design Admin: "[Admin] PlotChat | [0;0] Player » Test"
+    chat:
+      cmd-on: "§aYou joint the PlotChat chat!"
+      cmd-off: "§aYou leavt the PlotChat chat!"
   ui:
     title: "§6PlotChat"
     text: "§r\n§7Please send a PlotChat message."

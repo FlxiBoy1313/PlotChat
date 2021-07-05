@@ -37,7 +37,7 @@ class ChatCommand extends PluginCommand
     }
     
     /**
-	 * @param CommandSender $sender
+	 * @param CommandSender $player
 	 * @param string $alias
 	 * @param string[] $args
 	 */
@@ -45,36 +45,40 @@ class ChatCommand extends PluginCommand
     {
         $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
         $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
-        $plot = MyPlot::getInstance()->getPlotByPosition($player);
-        if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
-            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
-            return; 
-        }
-        if ($plot === null) {
-            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
-            return;
-        }
-        if (isset($args[0])) {
-            if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
-                if (!$api) {
-                    return;
+        if ($config->getNested("settings.chat.enable") == true) {
+            if (isset($args[0])) {
+                if ($args[0] == $config->getNested("settings.chat.cmd-on")) {
+                    $this->plugin->playerchat[] = $player->getName();
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-on"));
+                } elseif ($args[0] == $config->getNested("settings.chat.cmd-off")) {
+                    unset($this->plugin->playerchat[array_search($player, $this->plugin->playerchat)]);
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-off"));
+                } else {
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
                 }
-                $form = $api->createCustomForm(function (Player $player, $data = null) { 
-                    if ($data === null) {
-                        return; 
-                    }
-                    $this->sendChat($player, $data[0]);
-                });
-                $form->setTitle($config->getNested("message.ui.title"));
-                $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
-                $form->sendToPlayer($player);
-                return $form;
             } else {
-                $text = implode(" ", $args);
-                $this->sendChat($player, $text);
+                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
             }
         } else {
-            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+            if (isset($args[0])) {
+                if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd") and $api) {
+                    $form = $api->createCustomForm(function (Player $player, $data = null) { 
+                        if ($data === null) {
+                            return; 
+                        }
+                        $this->sendChat($player, $data[0]);
+                    });
+                    $form->setTitle($config->getNested("message.ui.title"));
+                    $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
+                    $form->sendToPlayer($player);
+                    return $form;
+                } else {
+                    $text = implode(" ", $args);
+                    $this->sendChat($player, $text);
+                }
+            } else {
+                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+            }
         }
         return true;
     }
@@ -86,6 +90,14 @@ class ChatCommand extends PluginCommand
     public function sendChat(Player $player, string $message) {
         $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
+        if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
+            return; 
+        }
+        if ($plot === null) {
+            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
+            return;
+        }
         if (!empty($message)) {
             foreach (Server::getInstance()->getOnlinePlayers() as $players) {
                 $plotx = MyPlot::getInstance()->getPlotByPosition($players);
@@ -122,7 +134,11 @@ class ChatCommand extends PluginCommand
                 }
             }
         } else {
-            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+            if ($config->getNested("settings.chat.enable") == true) {
+                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
+            } else{
+                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+            }
         }
     }
 }
