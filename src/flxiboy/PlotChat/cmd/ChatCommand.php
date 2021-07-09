@@ -128,7 +128,7 @@ class ChatCommand extends PluginCommand
                             }
                         } elseif ($config->getNested("settings.see-chat.mode") == "false") {
                         } else {
-                            Main::getInstance()->getLogger()->warning("please change the settings -> mode. use players, permission or false!");
+                            $this->plugin->getLogger()->warning("please change the settings -> mode. use players, permission or false!");
                         }
                     } 
                 }
