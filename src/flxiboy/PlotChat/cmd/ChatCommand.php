@@ -117,7 +117,7 @@ class ChatCommand extends PluginCommand
                         if ($config->getNested("settings.see-chat.mode") == "players") {
                             foreach ($config->getNested("settings.see-chat.mode-players") as $chatp) {
                                 if ($chatp instanceof Player) {
-                                    if ($chatp->hasPermission() == $config->getNested("settings.see-chat.mode-perms")) {
+                                    if ($chatp->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
                                         $chatp->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
                                     }
                                 }
