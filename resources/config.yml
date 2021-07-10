@@ -37,6 +37,12 @@ settings:
     cmd-on: "on"
     cmd-off: "off"
     usage: "§cUse: /chat <on, off>"
+  world:
+    # if this true, then you can only do /chat in these worlds!
+    enable: false
+    worlds:
+      - Plotworld1
+      - Plotworld2
 
 # messages, edit the message in the chat
 message:

@@ -24,12 +24,6 @@ class Main extends PluginBase
      */
     public function onEnable() {
         $this->saveResource("config.yml");
-        if (!$this->getServer()->getPluginManager()->getPlugin("MyPlot")) {
-            $this->getLogger()->warning("Please install MyPlot!");
-        }
-        if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
-            $this->getLogger()->warning("Please install FormAPI!");
-        }
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent($this), $this);
         $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         if ($config->getNested("settings.cmd.enable") == true) {
