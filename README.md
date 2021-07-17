@@ -15,6 +15,4 @@ You can all funktion edit in **config.yml**
 - [X] Chat on/off Support
 - [X] World support
 
-### Todo to next Update
-- [ ] Bugs fixes
-- [ ] And more...
+There are currently no bugs and no updates are required. If you have ideas, please ask and I will do it. :)
