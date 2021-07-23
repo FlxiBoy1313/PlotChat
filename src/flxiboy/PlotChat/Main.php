@@ -29,5 +29,9 @@ class Main extends PluginBase
         if ($config->getNested("settings.cmd.enable") == true) {
             $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand($this));
         }
+        if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
+            $this->getLogger()->warning("§cPlease install FormAPI!");
+            $this->getServer()->getPluginManager()->disablePlugin($this);
+        }
     }
 }
