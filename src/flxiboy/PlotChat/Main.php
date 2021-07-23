@@ -15,6 +15,10 @@ class Main extends PluginBase
 {
 
     /**
+     * @var self
+     */
+    protected static $instance;
+    /**
      * @var array
      */
     public $playerchat = [];
@@ -23,15 +27,24 @@ class Main extends PluginBase
      * Enable function: registering Command
      */
     public function onEnable() {
+        self::$instance = $this;
         $this->saveResource("config.yml");
-        $this->getServer()->getPluginManager()->registerEvents(new ChatEvent($this), $this);
+        $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
         $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         if ($config->getNested("settings.cmd.enable") == true) {
-            $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand($this));
+            $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
         }
         if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
             $this->getLogger()->warning("§cPlease install FormAPI!");
             $this->getServer()->getPluginManager()->disablePlugin($this);
         }
+    }
+
+    /**
+     * @return static
+     */
+    public static function getInstance(): self
+    {
+        return self::$instance;
     }
 }

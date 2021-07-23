@@ -23,14 +23,11 @@ class ChatCommand extends PluginCommand
 
     /**
 	 * Commands constructor.
-	 *
-	 * @param Main $plugin
 	 */
-	public function __construct(Main $plugin) 
+	public function __construct() 
     {
-        $this->plugin = $plugin;
-        $config = new Config($plugin->getDataFolder() . "config.yml", Config::YAML);
-        parent::__construct($config->getNested("settings.cmd.command"), $plugin);
+        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+        parent::__construct($config->getNested("settings.cmd.command"), Main::getInstance());
 		$this->setAliases([$config->getNested("settings.cmd.aliases")]);
 		$this->setDescription($config->getNested("settings.cmd.desc"));
 		$this->setUsage($config->getNested("settings.cmd.usage"));
@@ -43,70 +40,72 @@ class ChatCommand extends PluginCommand
 	 */
     public function execute(CommandSender $player, string $alias, array $args) 
     {
-        $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
-        $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
-        $plot = MyPlot::getInstance()->getPlotByPosition($player);
-        if ($config->getNested("settings.world.enable") == true) {
-            foreach ($config->getNested("settings.world.worlds") as $worlds) {
-                if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
-                    if ($player->getLevel() == Server::getInstance()->getLevelByName($worlds)) {
-                        if ($plot !== null) {
-                            if (isset($args[0])) {
-                                $text = implode(" ", $args);
-                                $this->sendChat($player, $text);
+        if ($player instanceof Player) {
+            $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
+            $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+            $plot = MyPlot::getInstance()->getPlotByPosition($player);
+            if ($config->getNested("settings.world.enable") == true) {
+                foreach ($config->getNested("settings.world.worlds") as $worlds) {
+                    if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
+                        if ($player->getLevel() == Server::getInstance()->getLevelByName($worlds)) {
+                            if ($plot !== null) {
+                                if (isset($args[0])) {
+                                    $text = implode(" ", $args);
+                                    $this->sendChat($player, $text);
+                                } else {
+                                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+                                }
                             } else {
-                                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+                                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
                             }
                         } else {
-                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
                         }
-                    } else {
-                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
                     }
                 }
-            }
-        } else {
-            if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
-                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
-                return; 
-            }
-            if ($plot === null) {
-                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
-                return;
-            }
-            if ($config->getNested("settings.chat.enable") == true) {
-                if (isset($args[0])) {
-                    if ($args[0] == $config->getNested("settings.chat.cmd-on")) {
-                        $this->plugin->playerchat[] = $player->getName();
-                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-on"));
-                    } elseif ($args[0] == $config->getNested("settings.chat.cmd-off")) {
-                        unset($this->plugin->playerchat[array_search($player, $this->plugin->playerchat)]);
-                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-off"));
+            } else {
+                if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
+                    return; 
+                }
+                if ($plot === null) {
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
+                    return;
+                }
+                if ($config->getNested("settings.chat.enable") == true) {
+                    if (isset($args[0])) {
+                        if ($args[0] == $config->getNested("settings.chat.cmd-on")) {
+                            Main::getInstance()->playerchat[] = $player->getName();
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-on"));
+                        } elseif ($args[0] == $config->getNested("settings.chat.cmd-off")) {
+                            unset(Main::getInstance()->playerchat[array_search($player, Main::getInstance()->playerchat)]);
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-off"));
+                        } else {
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
+                        }
                     } else {
                         $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
                     }
                 } else {
-                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
-                }
-            } else {
-                if (isset($args[0])) {
-                    if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd") and $api) {
-                        $form = $api->createCustomForm(function (Player $player, $data = null) { 
-                            if ($data === null) {
-                                return; 
-                            }
-                            $this->sendChat($player, $data[0]);
-                        });
-                        $form->setTitle($config->getNested("message.ui.title"));
-                        $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
-                        $form->sendToPlayer($player);
-                        return $form;
+                    if (isset($args[0])) {
+                        if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd") and $api) {
+                            $form = $api->createCustomForm(function (Player $player, $data = null) { 
+                                if ($data === null) {
+                                    return; 
+                                }
+                                $this->sendChat($player, $data[0]);
+                            });
+                            $form->setTitle($config->getNested("message.ui.title"));
+                            $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
+                            $form->sendToPlayer($player);
+                            return $form;
+                        } else {
+                            $text = implode(" ", $args);
+                            $this->sendChat($player, $text);
+                        }
                     } else {
-                        $text = implode(" ", $args);
-                        $this->sendChat($player, $text);
+                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                     }
-                } else {
-                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                 }
             }
         }
@@ -118,7 +117,7 @@ class ChatCommand extends PluginCommand
 	 * @param string $message
 	 */
     public function sendChat(Player $player, string $message) {
-        $config = new Config($this->plugin->getDataFolder() . "config.yml", Config::YAML);
+        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
         if (!empty($message)) {
             foreach (Server::getInstance()->getOnlinePlayers() as $players) {
@@ -149,8 +148,6 @@ class ChatCommand extends PluginCommand
                                 $players->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
                             }
                         } elseif ($config->getNested("settings.see-chat.mode") == "false") {
-                        } else {
-                            $this->plugin->getLogger()->warning("please change the settings -> mode. use players, permission or false!");
                         }
                     } 
                 }

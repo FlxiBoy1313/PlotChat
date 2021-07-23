@@ -16,26 +16,16 @@ class ChatEvent implements Listener
 {
 
     /**
-	 * Listener constructor.
-	 *
-	 * @param Main $plugin
-	 */
-    public function __construct(Main $plugin) 
-    {
-        $this->plugin = $plugin;
-    }
-
-    /**
      * @param PlayerChatEvent $event
      */
     public function onChat(PlayerChatEvent $event)
     {
         $player = $event->getPlayer();
         $message = $event->getMessage();
-        if (in_array($player->getName(), $this->plugin->playerchat) and MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+        if (in_array($player->getName(), Main::getInstance()->playerchat) and MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
             $event->setCancelled();
             if ($message !== null) {
-                $chat = new ChatCommand($this->plugin, $player);
+                $chat = new ChatCommand();
                 $chat->sendChat($player, $message);
             }
         }
