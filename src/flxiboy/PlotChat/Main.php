@@ -16,7 +16,7 @@ class Main extends PluginBase
     /**
      * @var self
      */
-    private static $instance;
+    protected static $instance;
     /**
      * @var array
      */
