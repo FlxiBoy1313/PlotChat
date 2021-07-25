@@ -4,7 +4,6 @@ namespace flxiboy\PlotChat;
 
 use flxiboy\PlotChat\cmd\ChatCommand;
 use pocketmine\plugin\PluginBase;
-use pocketmine\utils\Config;
 use flxiboy\PlotChat\events\ChatEvent;
 
 /**
@@ -30,14 +29,7 @@ class Main extends PluginBase
         self::$instance = $this;
         $this->saveResource("config.yml");
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
-        $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
-        if ($config->getNested("settings.cmd.enable") == true) {
-            $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
-        }
-        if (!$this->getServer()->getPluginManager()->getPlugin("FormAPI")) {
-            $this->getLogger()->warning("§cPlease install FormAPI!");
-            $this->getServer()->getPluginManager()->disablePlugin($this);
-        }
+        $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
     }
 
     /**

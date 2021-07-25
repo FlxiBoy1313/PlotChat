@@ -13,6 +13,7 @@ use pocketmine\{
 use pocketmine\utils\Config;
 use flxiboy\PlotChat\Main;
 use MyPlot\MyPlot;
+use jojoe77777\FormAPI\CustomForm;
 
 /**
  * Class ChatCommand
@@ -41,25 +42,16 @@ class ChatCommand extends PluginCommand
     public function execute(CommandSender $player, string $alias, array $args) 
     {
         if ($player instanceof Player) {
-            $api = Server::getInstance()->getPluginManager()->getPlugin("FormAPI");
             $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
             $plot = MyPlot::getInstance()->getPlotByPosition($player);
             if ($config->getNested("settings.world.enable") == true) {
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
                     if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
-                        if ($player->getLevel() == Server::getInstance()->getLevelByName($worlds)) {
-                            if ($plot !== null) {
-                                if (isset($args[0])) {
-                                    $text = implode(" ", $args);
-                                    $this->sendChat($player, $text);
-                                } else {
-                                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
-                                }
-                            } else {
-                                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
-                            }
+                        if (isset($args[0])) {
+                            $text = implode(" ", $args);
+                            $this->sendChat($player, $text);
                         } else {
-                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                         }
                     }
                 }
@@ -72,8 +64,8 @@ class ChatCommand extends PluginCommand
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
                     return;
                 }
-                if ($config->getNested("settings.chat.enable") == true) {
-                    if (isset($args[0])) {
+                if (isset($args[0])) {
+                    if ($args[0] == $config->getNested("settings.chat.cmd-on") or $args[0] == $config->getNested("settings.chat.cmd-off")) {
                         if ($args[0] == $config->getNested("settings.chat.cmd-on")) {
                             Main::getInstance()->playerchat[] = $player->getName();
                             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-on"));
@@ -81,15 +73,11 @@ class ChatCommand extends PluginCommand
                             unset(Main::getInstance()->playerchat[array_search($player, Main::getInstance()->playerchat)]);
                             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.chat.cmd-off"));
                         } else {
-                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                         }
                     } else {
-                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
-                    }
-                } else {
-                    if (isset($args[0])) {
-                        if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd") and $api) {
-                            $form = $api->createCustomForm(function (Player $player, $data = null) { 
+                        if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
+                            $form = new CustomForm(function (Player $player, $data = null) { 
                                 if ($data === null) {
                                     return; 
                                 }
@@ -103,9 +91,9 @@ class ChatCommand extends PluginCommand
                             $text = implode(" ", $args);
                             $this->sendChat($player, $text);
                         }
-                    } else {
-                        $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                     }
+                } else {
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                 }
             }
         }
@@ -119,45 +107,45 @@ class ChatCommand extends PluginCommand
     public function sendChat(Player $player, string $message) {
         $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
-        if (!empty($message)) {
-            foreach (Server::getInstance()->getOnlinePlayers() as $players) {
-                $plotx = MyPlot::getInstance()->getPlotByPosition($players);
-                $msg = $config->getNested("message.cmd.chat-msg");
-                $msg = str_replace("%x%", $plot->X, $msg);
-                $msg = str_replace("%z%", $plot->Z, $msg);
-                $msg = str_replace("%player%", $player->getName(), $msg);
-                $msg = str_replace("%msg%", $message, $msg);
-                if ($plotx !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
-                    if ($players == $player->getName()) {
-                        $player->sendMessage($msg);
-                    } else{
-                        $players->sendMessage($msg);
-                    }
-                } else {
-                    if ($config->getNested("settings.see-chat.mode") !== false) {
-                        if ($config->getNested("settings.see-chat.mode") == "players") {
-                            foreach ($config->getNested("settings.see-chat.mode-players") as $chatp) {
-                                if ($chatp instanceof Player) {
-                                    if ($chatp->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
-                                        $chatp->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
+        if ($plot !== null) {
+            if (!empty($message)) {
+                foreach (Server::getInstance()->getOnlinePlayers() as $players) {
+                    $plotx = MyPlot::getInstance()->getPlotByPosition($players);
+                    $msg = $config->getNested("message.cmd.chat-msg");
+                    $msg = str_replace("%x%", $plot->X, $msg);
+                    $msg = str_replace("%z%", $plot->Z, $msg);
+                    $msg = str_replace("%player%", $player->getName(), $msg);
+                    $msg = str_replace("%msg%", $message, $msg);
+                    if ($plotx !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
+                        if ($players == $player->getName()) {
+                            $player->sendMessage($msg);
+                        } else{
+                            $players->sendMessage($msg);
+                        }
+                    } else {
+                        if ($config->getNested("settings.see-chat.mode") !== false) {
+                            if ($config->getNested("settings.see-chat.mode") == "players") {
+                                foreach ($config->getNested("settings.see-chat.mode-players") as $chatp) {
+                                    if ($chatp instanceof Player) {
+                                        if ($chatp->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
+                                            $chatp->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
+                                        }
                                     }
                                 }
+                            } elseif ($config->getNested("settings.see-chat.mode") == "permission") {
+                                if ($players->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
+                                    $players->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
+                                }
                             }
-                        } elseif ($config->getNested("settings.see-chat.mode") == "permission") {
-                            if ($players->hasPermission($config->getNested("settings.see-chat.mode-perms"))) {
-                                $players->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
-                            }
-                        } elseif ($config->getNested("settings.see-chat.mode") == "false") {
-                        }
-                    } 
+                        } 
+                    }
                 }
-            }
-        } else {
-            if ($config->getNested("settings.chat.enable") == true) {
-                $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.chat.usage"));
-            } else{
+            } else {
                 $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
             }
+        } else {
+            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
         }
+        return true;
     }
 }

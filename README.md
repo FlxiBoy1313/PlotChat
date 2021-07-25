@@ -1,4 +1,4 @@
-# Chat addon for MyPlot v1.5
+# Chat addon for MyPlot v1.6
 This is a Plot chat addon for MyPlot.
 You can all funktion edit in **config.yml**
 
@@ -15,4 +15,6 @@ You can all funktion edit in **config.yml**
 - [X] Chat on/off Support
 - [X] World support
 
-There are currently no bugs and no updates are required. If you have ideas, please ask and I will do it. :)
+### ToDo
+- [ ] Merge Support
+- [ ] Disable/Enable color on PlotChat message

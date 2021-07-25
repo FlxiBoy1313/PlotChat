@@ -9,10 +9,9 @@
 # settings, edit the settings of PlotChat
 settings:
   cmd:
-    enable: true
     command: "chat"
     desc: "PlotChat command"
-    usage: "§cUse: /chat <message>"
+    usage: "§cUse: /chat <message / on, off>"
     aliases: "pchat"
   see-chat:
     msg: "§8[§cAdmin§8] "
@@ -21,22 +20,18 @@ settings:
     # - "players" => all peoples in the player list
     # - "false" => disable this feauture
     mode: "permission"
-    # if mode: permission
     mode-perms: "chat.see"
-    # if mode: players
     mode-players:
       - "Player1"
       - "Player2"
   ui:
-    enable: true
-    # this is there when you do '/chat ui' that opens the UI.
+    # if this true, then a UI can be opened.
+    enable: false
     cmd: "ui"
   chat:
-  # If this true, then only '/chat <on/off>' works. 
-    enable: false
+    # this is command of enable or disable the chat
     cmd-on: "on"
     cmd-off: "off"
-    usage: "§cUse: /chat <on, off>"
   world:
     # if this true, then you can only do /chat in these worlds!
     enable: false

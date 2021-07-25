@@ -7,6 +7,8 @@ use pocketmine\event\Listener;
 use flxiboy\PlotChat\Main;
 use flxiboy\PlotChat\cmd\ChatCommand;
 use MyPlot\MyPlot;
+use pocketmine\Server;
+use pocketmine\utils\Config;
 
 /**
  * Class ChatEvent
@@ -22,12 +24,32 @@ class ChatEvent implements Listener
     {
         $player = $event->getPlayer();
         $message = $event->getMessage();
-        if (in_array($player->getName(), Main::getInstance()->playerchat) and MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
-            $event->setCancelled();
-            if ($message !== null) {
-                $chat = new ChatCommand();
-                $chat->sendChat($player, $message);
+        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+        if (in_array($player->getName(), Main::getInstance()->playerchat)) {
+            if ($config->getNested("settings.world.enable") == true) {
+                foreach ($config->getNested("settings.world.worlds") as $worlds) {
+                    if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
+                        $event->setCancelled();
+                        if (isset($args[0])) {
+                            $text = implode(" ", $args);
+                            $this->sendChat($player, $text);
+                        } else {
+                            $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
+                        }
+                    }
+                }
+            } else {
+                $event->setCancelled();
+                if (MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+                    if ($message !== null) {
+                        $chat = new ChatCommand();
+                        $chat->sendChat($player, $message);
+                    }
+                } else {
+                    $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
+                }
             }
         }
+        return true;
     }
 }
