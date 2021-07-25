@@ -20,7 +20,7 @@ settings:
     # - "players" => all peoples in the player list
     # - "false" => disable this feauture
     mode: "permission"
-    mode-perms: "chat.see"
+    mode-perms: "PlotChat.see"
     mode-players:
       - "Player1"
       - "Player2"
