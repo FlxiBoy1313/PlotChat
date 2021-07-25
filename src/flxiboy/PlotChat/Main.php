@@ -35,7 +35,7 @@ class Main extends PluginBase
     /**
      * @return static
      */
-    public static function getInstance(): self
+    public static function getInstance(): Main
     {
         return self::$instance;
     }
