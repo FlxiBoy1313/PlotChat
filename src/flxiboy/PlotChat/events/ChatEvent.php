@@ -30,9 +30,11 @@ class ChatEvent implements Listener
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
                     if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
                         $event->setCancelled();
-                        if (isset($args[0])) {
-                            $text = implode(" ", $args);
-                            $this->sendChat($player, $text);
+                        if (isset($message)) {
+                            if ($message !== null) {
+                                $chat = new ChatCommand();
+                                $chat->sendChat($player, $message);
+                            }
                         } else {
                             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
                         }
@@ -53,3 +55,4 @@ class ChatEvent implements Listener
         return true;
     }
 }
+
