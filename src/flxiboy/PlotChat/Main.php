@@ -3,7 +3,6 @@
 namespace flxiboy\PlotChat;
 
 use flxiboy\PlotChat\cmd\ChatCommand;
-use MyPlot\Commands;
 use MyPlot\forms\MyPlotForm;
 use MyPlot\MyPlot;
 use MyPlot\subcommand\SubCommand;
@@ -54,7 +53,7 @@ class Main extends PluginBase
      */
     private function registerSubCommand(): void
     {
-        /** @var Commands $commands */
+        /** @var \MyPlot\Commands $commands */
         $commands = $this->getServer()->getCommandMap()->getCommand('plot');
         if(is_null($commands))
             return;
@@ -87,4 +86,5 @@ class Main extends PluginBase
         };
         $commands->loadSubCommand($command);
     }
+
 }
