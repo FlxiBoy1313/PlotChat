@@ -3,13 +3,13 @@
 namespace flxiboy\PlotChat;
 
 use flxiboy\PlotChat\cmd\ChatCommand;
+use pocketmine\plugin\PluginBase;
+use flxiboy\PlotChat\events\ChatEvent;
 use MyPlot\forms\MyPlotForm;
 use MyPlot\MyPlot;
 use MyPlot\subcommand\SubCommand;
 use pocketmine\command\CommandSender;
 use pocketmine\Player;
-use pocketmine\plugin\PluginBase;
-use flxiboy\PlotChat\events\ChatEvent;
 
 /**
  * Class Main
@@ -32,20 +32,25 @@ class Main extends PluginBase
      */
     public function onEnable() {
         self::$instance = $this;
+        $config = $this->getConfig();
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
-        $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
-        $this->registerSubCommand();
+        if ($config->getNested("settings.cmd.mode") == "myplot") {
+            $this->registerSubCommand();
+        } elseif ($config->getNested("settings.cmd.mode") == "plugin") {
+            $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
+        }
     }
 
     /**
-     * @return self
+     * @return static
      */
-    public static function getInstance(): self
+    public static function getInstance(): Main
     {
         return self::$instance;
     }
 
+    
     /**
      * Registers the /p chat subcommand
      *
@@ -54,16 +59,26 @@ class Main extends PluginBase
     private function registerSubCommand(): void
     {
         /** @var \MyPlot\Commands $commands */
-        $commands = $this->getServer()->getCommandMap()->getCommand('plot');
+        $commands = Main::getInstance()->getServer()->getCommandMap()->getCommand('plot');
         if(is_null($commands))
             return;
         if(!version_compare(MyPlot::getInstance()->getDescription()->getVersion(), '1.9.0', '>='))
             return;
         $command = new class(MyPlot::getInstance(), 'chat') extends SubCommand {
+            public function getUsage() : string 
+            {
+                $config = Main::getInstance()->getConfig();
+                return $config->getNested("settings.cmd.usage");
+            }
             public function getName(): string
             {
                 $config = Main::getInstance()->getConfig();
                 return $config->getNested("settings.cmd.command");
+            }
+            public function getDescription() : string 
+            {
+                $config = Main::getInstance()->getConfig();
+                return $config->getNested("settings.cmd.desc");
             }
             public function getAlias(): string
             {
@@ -86,5 +101,4 @@ class Main extends PluginBase
         };
         $commands->loadSubCommand($command);
     }
-
 }

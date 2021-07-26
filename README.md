@@ -1,4 +1,4 @@
-# Chat addon for MyPlot v1.7
+# Chat addon for MyPlot v1.8
 This is a Plot chat addon for MyPlot.
 You can all funktion edit in **config.yml**
 

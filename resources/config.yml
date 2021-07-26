@@ -9,9 +9,11 @@
 # settings, edit the settings of PlotChat
 settings:
   cmd:
+    # modes: myplot => is /p chat, plugin => is /chat
+    mode: "myplot"
     command: "chat"
-    desc: "PlotChat command"
-    usage: "§cUse: /chat <message / on, off>"
+    desc: "Write here in the plot chat"
+    usage: "§cUse: /(p) chat <message / on, off>"
     aliases: "pchat"
   see-chat:
     msg: "§8[§cAdmin§8] "
