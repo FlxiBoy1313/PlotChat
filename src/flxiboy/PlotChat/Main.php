@@ -27,7 +27,7 @@ class Main extends PluginBase
      */
     public function onEnable() {
         self::$instance = $this;
-        $this->saveResource("config.yml");
+        $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
         $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
     }

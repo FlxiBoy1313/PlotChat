@@ -10,7 +10,6 @@ use pocketmine\{
     Server,
     Player
 };
-use pocketmine\utils\Config;
 use flxiboy\PlotChat\Main;
 use MyPlot\MyPlot;
 use jojoe77777\FormAPI\CustomForm;
@@ -27,7 +26,7 @@ class ChatCommand extends PluginCommand
 	 */
 	public function __construct() 
     {
-        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+        $config = Main::getInstance()->getConfig();
         parent::__construct($config->getNested("settings.cmd.command"), Main::getInstance());
 		$this->setAliases([$config->getNested("settings.cmd.aliases")]);
 		$this->setDescription($config->getNested("settings.cmd.desc"));
@@ -42,7 +41,7 @@ class ChatCommand extends PluginCommand
     public function execute(CommandSender $player, string $alias, array $args) 
     {
         if ($player instanceof Player) {
-            $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+            $config = Main::getInstance()->getConfig();
             $plot = MyPlot::getInstance()->getPlotByPosition($player);
             if ($config->getNested("settings.world.enable") == true) {
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
@@ -105,7 +104,7 @@ class ChatCommand extends PluginCommand
 	 * @param string $message
 	 */
     public function sendChat(Player $player, string $message) {
-        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+        $config = Main::getInstance()->getConfig();
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
         if ($plot !== null) {
             if (!empty($message)) {
