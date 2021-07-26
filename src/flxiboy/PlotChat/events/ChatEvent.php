@@ -50,7 +50,6 @@ class ChatEvent implements Listener
                 }
             }
         }
-        return true;
     }
 }
 
