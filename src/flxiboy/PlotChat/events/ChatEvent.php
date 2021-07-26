@@ -7,7 +7,6 @@ use pocketmine\event\Listener;
 use flxiboy\PlotChat\Main;
 use flxiboy\PlotChat\cmd\ChatCommand;
 use MyPlot\MyPlot;
-use pocketmine\Server;
 
 /**
  * Class ChatEvent
