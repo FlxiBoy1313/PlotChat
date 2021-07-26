@@ -81,7 +81,7 @@ class ChatCommand extends PluginCommand
                         }
                     } else {
                         if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
-                            $form = new CustomForm(function (Player $player, $data = null) { 
+                            $form = new CustomForm(function (Player $player, $data = null) use ($config) { 
                                 if ($data === null) {
                                     return; 
                                 }
