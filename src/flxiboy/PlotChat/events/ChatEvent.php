@@ -7,8 +7,6 @@ use pocketmine\event\Listener;
 use flxiboy\PlotChat\Main;
 use flxiboy\PlotChat\cmd\ChatCommand;
 use MyPlot\MyPlot;
-use pocketmine\Server;
-use pocketmine\utils\Config;
 
 /**
  * Class ChatEvent
@@ -24,7 +22,7 @@ class ChatEvent implements Listener
     {
         $player = $event->getPlayer();
         $message = $event->getMessage();
-        $config = new Config(Main::getInstance()->getDataFolder() . "config.yml", Config::YAML);
+        $config = Main::getInstance()->getConfig();
         if (in_array($player->getName(), Main::getInstance()->playerchat)) {
             if ($config->getNested("settings.world.enable") == true) {
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
@@ -52,7 +50,6 @@ class ChatEvent implements Listener
                 }
             }
         }
-        return true;
     }
 }
 
