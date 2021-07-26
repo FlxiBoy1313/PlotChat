@@ -84,7 +84,7 @@ class ChatCommand extends PluginCommand
                             });
                             $form->setTitle($config->getNested("message.ui.title"));
                             $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
-                            $form->sendToPlayer($player);
+                            $player->sendForm($form);
                             return $form;
                         } else {
                             $text = implode(" ", $args);
