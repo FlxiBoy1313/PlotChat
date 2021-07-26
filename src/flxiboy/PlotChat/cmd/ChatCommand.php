@@ -28,9 +28,9 @@ class ChatCommand extends PluginCommand
     {
         $config = Main::getInstance()->getConfig();
         parent::__construct($config->getNested("settings.cmd.command"), Main::getInstance());
-		$this->setAliases([$config->getNested("settings.cmd.aliases")]);
-		$this->setDescription($config->getNested("settings.cmd.desc"));
-		$this->setUsage($config->getNested("settings.cmd.usage"));
+        $this->setAliases([$config->getNested("settings.cmd.aliases")]);
+        $this->setDescription($config->getNested("settings.cmd.desc"));
+        $this->setUsage($config->getNested("settings.cmd.usage"));
     }
     
     /**
