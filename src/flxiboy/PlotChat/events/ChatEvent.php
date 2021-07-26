@@ -30,6 +30,11 @@ class ChatEvent implements Listener
                         $event->setCancelled();
                         if (empty($message)) {
                             if ($message !== null) {
+                                if ($config->getNested("settings.chat.color-chat") == false and strpos($message, "§") !== false) {
+                                    foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                                        $message = str_replace("§" . $colors, "", $message);
+                                    } 
+                                }
                                 $chat = new ChatCommand();
                                 $chat->sendChat($player, $message);
                             }
@@ -42,6 +47,11 @@ class ChatEvent implements Listener
                 $event->setCancelled();
                 if (MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
                     if ($message !== null) {
+                        if ($config->getNested("settings.chat.color-chat") == false and strpos($message, "§") !== false) {
+                            foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                                $message = str_replace("§" . $colors, "", $message);
+                            } 
+                        }
                         $chat = new ChatCommand();
                         $chat->sendChat($player, $message);
                     }

@@ -32,6 +32,28 @@ settings:
     # this is command of enable or disable the chat
     cmd-on: "on"
     cmd-off: "off"
+    # if this true, then you cannot use colors otherwise.
+    color-chat: false
+    color-chat-block:
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 0
+      - "a"
+      - "b"
+      - "c"
+      - "d"
+      - "e"
+      - "o"
+      - "r"
+      - "f"
+      - "l"
   world:
     # if this true, then you can only do /chat in these worlds!
     enable: false

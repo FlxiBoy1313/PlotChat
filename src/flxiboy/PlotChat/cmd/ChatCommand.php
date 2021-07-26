@@ -48,6 +48,11 @@ class ChatCommand extends PluginCommand
                     if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
                         if (isset($args[0])) {
                             $text = implode(" ", $args);
+                            if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
+                                foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                                    $text = str_replace("§" . $colors, "", $text);
+                                } 
+                            }
                             $this->sendChat($player, $text);
                         } else {
                             $player->sendMessage($config->getNested("message.prefix") . $config->getNested("settings.cmd.usage"));
@@ -80,7 +85,13 @@ class ChatCommand extends PluginCommand
                                 if ($data === null) {
                                     return; 
                                 }
-                                $this->sendChat($player, $data[0]);
+                                $text = $data[0];
+                                if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
+                                    foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                                        $text = str_replace("§" . $colors, "", $text);
+                                    } 
+                                }
+                                $this->sendChat($player, $text);
                             });
                             $form->setTitle($config->getNested("message.ui.title"));
                             $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
@@ -88,6 +99,11 @@ class ChatCommand extends PluginCommand
                             return $form;
                         } else {
                             $text = implode(" ", $args);
+                            if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
+                                foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                                    $text = str_replace("§" . $colors, "", $text);
+                                } 
+                            }
                             $this->sendChat($player, $text);
                         }
                     }
