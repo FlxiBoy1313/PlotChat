@@ -3,6 +3,12 @@
 namespace flxiboy\PlotChat;
 
 use flxiboy\PlotChat\cmd\ChatCommand;
+use MyPlot\Commands;
+use MyPlot\forms\MyPlotForm;
+use MyPlot\MyPlot;
+use MyPlot\subcommand\SubCommand;
+use pocketmine\command\CommandSender;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use flxiboy\PlotChat\events\ChatEvent;
 
@@ -30,6 +36,7 @@ class Main extends PluginBase
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
         $this->getServer()->getCommandMap()->register("PlotChat", new ChatCommand());
+        $this->registerSubCommand();
     }
 
     /**
@@ -38,5 +45,46 @@ class Main extends PluginBase
     public static function getInstance(): self
     {
         return self::$instance;
+    }
+
+    /**
+     * Registers the /p chat subcommand
+     *
+     * @return void
+     */
+    private function registerSubCommand(): void
+    {
+        /** @var Commands $commands */
+        $commands = $this->getServer()->getCommandMap()->getCommand('plot');
+        if(is_null($commands))
+            return;
+        if(!version_compare(MyPlot::getInstance()->getDescription()->getVersion(), '1.9.0', '>='))
+            return;
+        $command = new class(MyPlot::getInstance(), 'chat') extends SubCommand {
+            public function getName(): string
+            {
+                $config = Main::getInstance()->getConfig();
+                return $config->getNested("settings.cmd.command");
+            }
+            public function getAlias(): string
+            {
+                $config = Main::getInstance()->getConfig();
+                return $config->getNested("settings.cmd.aliases");
+            }
+            public function canUse(CommandSender $sender): bool
+            {
+                return $sender instanceof Player;
+            }
+            public function execute(CommandSender $sender, array $args): bool
+            {
+                Main::getInstance()->getServer()->dispatchCommand($sender, $this->getName() . ' ' . implode(' ', $args));
+                return true;
+            }
+            public function getForm(?Player $player = null): ?MyPlotForm
+            {
+                return null;
+            }
+        };
+        $commands->loadSubCommand($command);
     }
 }
