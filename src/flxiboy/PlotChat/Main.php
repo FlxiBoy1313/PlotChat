@@ -30,7 +30,8 @@ class Main extends PluginBase
     /**
      * Enable function: registering Command
      */
-    public function onEnable() {
+    public function onEnable()
+    {
         self::$instance = $this;
         $config = $this->getConfig();
         $this->reloadConfig();
@@ -91,7 +92,8 @@ class Main extends PluginBase
             }
             public function execute(CommandSender $sender, array $args): bool
             {
-                Main::getInstance()->getServer()->dispatchCommand($sender, $this->getName() . ' ' . implode(' ', $args));
+                $command = new ChatCommand();
+                $command->getCommand($sender);
                 return true;
             }
             public function getForm(?Player $player = null): ?MyPlotForm

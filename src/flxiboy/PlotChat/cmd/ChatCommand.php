@@ -40,6 +40,15 @@ class ChatCommand extends PluginCommand
 	 */
     public function execute(CommandSender $player, string $alias, array $args) 
     {
+        $this->getCommand($player);
+    }
+
+    /**
+     * @param Player $player
+     * @return bool|CustomForm|void
+     */
+    public function getCommand(Player $player)
+    {
         if ($player instanceof Player) {
             $config = Main::getInstance()->getConfig();
             $plot = MyPlot::getInstance()->getPlotByPosition($player);
@@ -51,7 +60,7 @@ class ChatCommand extends PluginCommand
                             if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
                                 foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                                     $text = str_replace("§" . $colors, "", $text);
-                                } 
+                                }
                             }
                             $this->sendChat($player, $text);
                         } else {
@@ -62,7 +71,7 @@ class ChatCommand extends PluginCommand
             } else {
                 if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
-                    return; 
+                    return;
                 }
                 if ($plot === null) {
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
@@ -81,15 +90,15 @@ class ChatCommand extends PluginCommand
                         }
                     } else {
                         if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
-                            $form = new CustomForm(function (Player $player, $data = null) use ($config) { 
+                            $form = new CustomForm(function (Player $player, $data = null) use ($config) {
                                 if ($data === null) {
-                                    return; 
+                                    return;
                                 }
                                 $text = $data[0];
                                 if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
                                     foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                                         $text = str_replace("§" . $colors, "", $text);
-                                    } 
+                                    }
                                 }
                                 $this->sendChat($player, $text);
                             });
@@ -102,7 +111,7 @@ class ChatCommand extends PluginCommand
                             if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
                                 foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                                     $text = str_replace("§" . $colors, "", $text);
-                                } 
+                                }
                             }
                             $this->sendChat($player, $text);
                         }

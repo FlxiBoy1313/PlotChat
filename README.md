@@ -5,7 +5,7 @@ You can all funktion edit in **config.yml**
 ### Commands
 |**Command**|**Description**|
 |-----------|---------------|
-|/chat <message>|Send a message in the PlotChat|
+|/(p) chat <message>|Send a message in the PlotChat|
 
 ### Feature
 - [X] Command
