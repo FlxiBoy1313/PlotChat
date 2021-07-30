@@ -18,12 +18,7 @@ use jojoe77777\FormAPI\CustomForm;
 class ChatCommand extends SubCommand
 {
 
-    /**
-     * @var Main
-     */
-    private $realPlugin;
-
-	public function __construct(Main $plugin) 
+	public function __construct() 
     {
         parent::__construct(MyPlot::getInstance(), $this->getName());
     }

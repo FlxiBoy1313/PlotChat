@@ -30,7 +30,7 @@ class Main extends PluginBase
         self::$instance = $this;
         $this->reloadConfig();
         $this->getServer()->getPluginManager()->registerEvents(new ChatEvent(), $this);
-        $this->getServer()->getCommandMap()->getCommand("plot")->loadSubCommand(new ChatCommand($this));
+        $this->getServer()->getCommandMap()->getCommand("plot")->loadSubCommand(new ChatCommand());
     }
 
     /**
