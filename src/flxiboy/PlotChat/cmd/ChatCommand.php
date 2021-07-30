@@ -2,52 +2,66 @@
 
 namespace flxiboy\PlotChat\cmd;
 
-use pocketmine\command\{
-    PluginCommand,
-    CommandSender
-};
-use pocketmine\{
-    Server,
-    Player
-};
+use pocketmine\command\CommandSender;
+use pocketmine\Server;
+use pocketmine\Player;
 use flxiboy\PlotChat\Main;
+use MyPlot\forms\MyPlotForm;
 use MyPlot\MyPlot;
+use MyPlot\subcommand\SubCommand;
 use jojoe77777\FormAPI\CustomForm;
 
 /**
  * Class ChatCommand
  * @package flxiboy\PlotChat\cmd
  */
-class ChatCommand extends PluginCommand
+class ChatCommand extends SubCommand
 {
 
-    /**
-	 * Commands constructor.
-	 */
 	public function __construct() 
     {
-        $config = Main::getInstance()->getConfig();
-        parent::__construct($config->getNested("settings.cmd.command"), Main::getInstance());
-        $this->setAliases([$config->getNested("settings.cmd.aliases")]);
-        $this->setDescription($config->getNested("settings.cmd.desc"));
-        $this->setUsage($config->getNested("settings.cmd.usage"));
+        parent::__construct(MyPlot::getInstance(), $this->getName());
     }
-    
+
+    public function getUsage() : string 
+    {
+        $config = Main::getInstance()->getConfig();
+        return $config->getNested("settings.cmd.usage");
+    }
+
+    public function getName(): string
+    {
+        $config = Main::getInstance()->getConfig();
+        return $config->getNested("settings.cmd.command");
+    }
+
+    public function getDescription() : string 
+    {
+        $config = Main::getInstance()->getConfig();
+        return $config->getNested("settings.cmd.desc");
+    }
+
     /**
 	 * @param CommandSender $player
-	 * @param string $alias
-	 * @param string[] $args
 	 */
-    public function execute(CommandSender $player, string $alias, array $args) 
+    public function canUse(CommandSender $player): bool
     {
-        $this->getCommand($player);
+        return $player instanceof Player;
     }
 
     /**
      * @param Player $player
-     * @return bool|CustomForm|void
      */
-    public function getCommand(Player $player)
+	public function getForm(?Player $player = null) : ?MyPlotForm 
+    {
+		return null;
+	}
+    
+    /**
+	 * @param CommandSender $player
+	 * @param string[] $args
+	 */
+    public function execute(CommandSender $player, array $args): bool
     {
         if ($player instanceof Player) {
             $config = Main::getInstance()->getConfig();
@@ -71,11 +85,11 @@ class ChatCommand extends PluginCommand
             } else {
                 if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
-                    return;
+                    return true;
                 }
                 if ($plot === null) {
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-plot"));
-                    return;
+                    return true;
                 }
                 if (isset($args[0])) {
                     if ($args[0] == $config->getNested("settings.chat.cmd-on") or $args[0] == $config->getNested("settings.chat.cmd-off")) {
@@ -128,7 +142,8 @@ class ChatCommand extends PluginCommand
 	 * @param Player $player
 	 * @param string $message
 	 */
-    public function sendChat(Player $player, string $message) {
+    public function sendChat(Player $player, string $message): bool
+    {
         $config = Main::getInstance()->getConfig();
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
         if ($plot !== null) {

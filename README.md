@@ -1,11 +1,11 @@
-# Chat addon for MyPlot v1.8
+# Chat addon for MyPlot v2.0
 This is a Plot chat addon for MyPlot.
 You can all funktion edit in **config.yml**
 
 ### Commands
 |**Command**|**Description**|
 |-----------|---------------|
-|/(p) chat <message>|Send a message in the PlotChat|
+|/p chat <message>|Send a message in the PlotChat|
 
 ### Feature
 - [X] Command
