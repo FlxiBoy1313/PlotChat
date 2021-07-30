@@ -104,22 +104,7 @@ class ChatCommand extends SubCommand
                         }
                     } else {
                         if ($config->getNested("settings.ui.enable") == true and $args[0] == $config->getNested("settings.ui.cmd")) {
-                            $form = new CustomForm(function (Player $player, $data = null) use ($config) {
-                                if ($data === null) {
-                                    return;
-                                }
-                                $text = $data[0];
-                                if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
-                                    foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
-                                        $text = str_replace("§" . $colors, "", $text);
-                                    }
-                                }
-                                $this->sendChat($player, $text);
-                            });
-                            $form->setTitle($config->getNested("message.ui.title"));
-                            $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
-                            $player->sendForm($form);
-                            return $form;
+                            $this->sendUI($player);
                         } else {
                             $text = implode(" ", $args);
                             if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
@@ -136,6 +121,31 @@ class ChatCommand extends SubCommand
             }
         }
         return true;
+    }
+
+    /**
+	 * @param Player $player
+	 */
+    public function sendUI(Player $player): CustomForm
+    {
+        $config = Main::getInstance()->getConfig();
+        $form = new CustomForm(function (Player $player, $data = null) use ($config) {
+            if ($data === null) {
+                return;
+            }
+            $text = $data[0];
+            if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
+                foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
+                    $text = str_replace("§" . $colors, "", $text);
+                }
+            }
+            $this->sendChat($player, $text);
+            return true;
+        });
+        $form->setTitle($config->getNested("message.ui.title"));
+        $form->addInput($config->getNested("message.ui.text"), $config->getNested("message.ui.input"));
+        $player->sendForm($form);
+        return $form;
     }
 
     /**
