@@ -17,3 +17,4 @@ You can all funktion edit in **config.yml**
 
 ### ToDo
 - [ ] Merge Support
+- [ ] Chat log
