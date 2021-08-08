@@ -5,7 +5,7 @@ namespace flxiboy\PlotChat\events;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\Listener;
 use flxiboy\PlotChat\Main;
-use flxiboy\PlotChat\cmd\ChatCommand;
+use flxiboy\PlotChat\api\ChatAPI;
 use MyPlot\MyPlot;
 
 /**
@@ -23,6 +23,7 @@ class ChatEvent implements Listener
         $player = $event->getPlayer();
         $message = $event->getMessage();
         $config = Main::getInstance()->getConfig();
+        $chat = new ChatAPI();
         if (in_array($player->getName(), Main::getInstance()->playerchat)) {
             if ($config->getNested("settings.world.enable") == true) {
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
@@ -35,7 +36,6 @@ class ChatEvent implements Listener
                                         $message = str_replace("§" . $colors, "", $message);
                                     } 
                                 }
-                                $chat = new ChatCommand();
                                 $chat->sendChat($player, $message);
                             }
                         } else {
@@ -52,7 +52,6 @@ class ChatEvent implements Listener
                                 $message = str_replace("§" . $colors, "", $message);
                             } 
                         }
-                        $chat = new ChatCommand();
                         $chat->sendChat($player, $message);
                     }
                 } else {

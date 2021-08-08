@@ -27,6 +27,12 @@ settings:
     # if this true, then a UI can be opened.
     enable: false
     cmd: "ui"
+  log:
+    cmd: log
+    # This is the permission to clear the log. If this is false, it will be displayed for everyone.
+    admin-perms: "PlotChat.admin.log"
+    admin-img: "textures/ui/trash"
+    okay-img: "textures/ui/listcheck"
   chat:
     # this is command of enable or disable the chat
     cmd-on: "on"
@@ -77,7 +83,21 @@ message:
     chat:
       cmd-on: "§aYou joint the PlotChat chat!"
       cmd-off: "§aYou leavt the PlotChat chat!"
-  ui:
+  chat:
     title: "§6PlotChat"
     text: "§r\n§7Please send a PlotChat message."
     input: "§7Here..."
+    not-message: "§cPlease write a message."
+  log:
+    # formats:
+    #  - %x% => see the plot position x
+    #  - %z% => see the plot position z
+    #  - %user% => see the player name
+    #  - %message% => see the message
+    title: "§6PlotChat §8| §7Log"
+    text: "§r\n§aThis is the log from the plot §8[§6%x%§7;§6%z%§8]§a:"
+    not-inlog: "§r\n§cThe log is currently empty."
+    format: "§c%user% §8| §a%message%"
+    okay: "§7Okay"
+    admin-delete: "§4Delete"
+    admin-success: "§aThe log of plot §8[§6%x%§7;§6%z%§8] §ahas been deleted!"
