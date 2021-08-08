@@ -68,20 +68,25 @@ class ChatForm
                     $msg = str_replace("%x%", $plotx, $msg);
                     $msg = str_replace("%z%", $plotz, $msg);
                     $player->sendMessage($config->getNested("message.prefix") . $msg);
-                    $log->remove($plotx . ";" . $plotz);
+                    $log->removeNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz);
                     $log->save();
                     break;
             }
             return true;
         });
         $form->setTitle($config->getNested("message.log.title"));
-        if ($log->exists($plotx . ";" . $plotz)) {
+        if ($log->getNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz)) {
             $list = [];
-            foreach ($log->get($plotx . ";" . $plotz) as $plot) {
+            foreach ($log->getNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz) as $plot) {
                 $plots = explode(":", $plot);
                 $format = $config->getNested("message.log.format");
-                $format = str_replace("%user%", $plots[0], $format);
-                $format = str_replace("%message%", $plots[1], $format);
+                $format = str_replace("%year%", $plots[0], $format);
+                $format = str_replace("%month%", $plots[1], $format);
+                $format = str_replace("%day%", $plots[2], $format);
+                $format = str_replace("%hour%", $plots[3], $format);
+                $format = str_replace("%minute%", $plots[4], $format);
+                $format = str_replace("%user%", $plots[6], $format);
+                $format = str_replace("%message%", $plots[7], $format);
                 $list[] = $format;
             }
             $content = $config->getNested("message.log.text");

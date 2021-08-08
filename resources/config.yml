@@ -11,7 +11,7 @@ settings:
   cmd:
     command: "chat"
     desc: "Write here in the plot chat"
-    usage: "§cUse: /(p) chat <message / on, off>"
+    usage: "§cUse: /p chat <message, on-off, log, (ui)>"
   see-chat:
     msg: "§8[§cAdmin§8] "
     # modes:
@@ -60,7 +60,7 @@ settings:
       - "f"
       - "l"
   world:
-    # if this true, then you can only do /chat in these worlds!
+    # if this true, then you can only do /p chat in these worlds!
     enable: false
     worlds:
       - Plotworld1
@@ -94,10 +94,15 @@ message:
     #  - %z% => see the plot position z
     #  - %user% => see the player name
     #  - %message% => see the message
+    #  - %year% => see the year of the message
+    #  - %month% => see the month of the message
+    #  - %day% => see the day of the message
+    #  - %hour% => see the hour of the message
+    #  - %minute% => see the minute of the message
     title: "§6PlotChat §8| §7Log"
     text: "§r\n§aThis is the log from the plot §8[§6%x%§7;§6%z%§8]§a:"
     not-inlog: "§r\n§cThe log is currently empty."
-    format: "§c%user% §8| §a%message%"
+    format: "§8[§b%year%:%month%:%day% | %hour%:%minute%§8] §c%user% §8| §a%message%"
     okay: "§7Okay"
     admin-delete: "§4Delete"
     admin-success: "§aThe log of plot §8[§6%x%§7;§6%z%§8] §ahas been deleted!"

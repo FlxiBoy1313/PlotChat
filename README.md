@@ -1,11 +1,11 @@
-# Chat addon for MyPlot v2.1
+# Chat addon for MyPlot v2.2
 This is a Plot chat addon for MyPlot.
 You can all funktion edit in **config.yml**
 
 ### Commands
 |**Command**|**Description**|
 |-----------|---------------|
-|/p chat <message>|Send a message in the PlotChat|
+|/p chat <message, on-off, log>|Send a message in the PlotChat|
 
 ### Feature
 - [X] Command
@@ -15,9 +15,6 @@ You can all funktion edit in **config.yml**
 - [X] Chat on/off Support
 - [X] World support
 - [X] Chat log
-
-### Next Update
-- [ ] More stuff for Chat log (Worlds mode, time, and more!)
 
 ### ToDo
 - [ ] Merge Support

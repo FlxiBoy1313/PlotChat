@@ -23,11 +23,12 @@ class ChatAPI
         $config = Main::getInstance()->getConfig();
         $log = Main::getInstance()->getLog();
         $plot = MyPlot::getInstance()->getPlotByPosition($player);
+        $date = new \DateTime('now');
         if ($plot !== null) {
             if (!empty($message)) {
-                $logsave = $log->get($plot->X . ";" . $plot->Z);
-                $logsave[] = $player->getName() . ":" . $message;
-                $log->set($plot->X . ";" . $plot->Z, $logsave);
+                $logsave = $log->getNested($player->getLevel()->getFolderName() . $plot->X . ";" . $plot->Z);
+                $logsave[] = $date->format("Y:m:d:H:i:s") . ":" . $player->getName() . ":" . $message;
+                $log->setNested($player->getLevel()->getFolderName() . "." . $plot->X . ";" . $plot->Z, $logsave);
                 $log->save();
                 foreach (Server::getInstance()->getOnlinePlayers() as $players) {
                     $plotx = MyPlot::getInstance()->getPlotByPosition($players);

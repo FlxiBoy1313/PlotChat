@@ -23,19 +23,19 @@ class ChatCommand extends SubCommand
         parent::__construct(MyPlot::getInstance(), $this->getName());
     }
 
-    public function getUsage()
+    public function getUsage(): string
     {
         $config = Main::getInstance()->getConfig();
         return $config->getNested("settings.cmd.usage");
     }
 
-    public function getName()
+    public function getName(): string
     {
         $config = Main::getInstance()->getConfig();
         return $config->getNested("settings.cmd.command");
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         $config = Main::getInstance()->getConfig();
         return $config->getNested("settings.cmd.desc");
@@ -44,7 +44,7 @@ class ChatCommand extends SubCommand
     /**
 	 * @param CommandSender $player
 	 */
-    public function canUse(CommandSender $player)
+    public function canUse(CommandSender $player): bool
     {
         return $player instanceof Player;
     }
