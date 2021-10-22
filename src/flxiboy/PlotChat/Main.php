@@ -17,7 +17,7 @@ class Main extends PluginBase
     /**
      * @var self
      */
-    protected static $instance;
+    protected static Main $instance;
     /**
      * @var array
      */
@@ -45,7 +45,7 @@ class Main extends PluginBase
     /**
      * @return Config
      */
-    public static function getLog(): Config
+    public function getLog(): Config
     {
         return new Config(self::$instance->getDataFolder() . "log.yml", Config::YAML);
     }

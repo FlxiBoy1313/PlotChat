@@ -26,7 +26,7 @@ class ChatAPI
         $date = new \DateTime('now');
         if ($plot !== null) {
             if (!empty($message)) {
-                $logsave = $log->getNested($player->getLevel()->getFolderName() . $plot->X . ";" . $plot->Z);
+                $logsave = $log->getNested($player->getLevel()->getFolderName() . "." . $plot->X . ";" . $plot->Z, []);
                 $logsave[] = $date->format("Y:m:d:H:i:s") . ":" . $player->getName() . ":" . $message;
                 $log->setNested($player->getLevel()->getFolderName() . "." . $plot->X . ";" . $plot->Z, $logsave);
                 $log->save();
@@ -37,7 +37,7 @@ class ChatAPI
                     $msg = str_replace("%z%", $plot->Z, $msg);
                     $msg = str_replace("%player%", $player->getName(), $msg);
                     $msg = str_replace("%msg%", $message, $msg);
-                    if ($plotx !== null and $plotx->X == $plot->X and $plotx->Z == $plot->Z) {
+                    if ($plotx !== null && $plotx->X == $plot->X && $plotx->Z == $plot->Z) {
                         if ($players == $player->getName()) {
                             $player->sendMessage($msg);
                         } else{

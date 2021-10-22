@@ -29,7 +29,7 @@ class ChatForm
 
             $text = $data[0];
             if ($text !== null) {
-                if ($config->getNested("settings.chat.color-chat") == false and strpos($text, "§") !== false) {
+                if ($config->getNested("settings.chat.color-chat") == false && strpos($text, "§") !== false) {
                     foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                         $text = str_replace("§" . $colors, "", $text);
                     }
@@ -93,7 +93,7 @@ class ChatForm
             $content = str_replace("%x%", $plotx, $content);
             $content = str_replace("%z%", $plotz, $content);
             $form->setContent($content . "\n§r\n" . implode("\n", $list) . "§r\n§e");
-            if ($config->getNested("settings.log.admin-img") !== false and strpos($config->getNested("settings.log.admin-img"), "textures/") !== false) { $picture = 0; } else { $picture = 1; }
+            if ($config->getNested("settings.log.admin-img") !== false && strpos($config->getNested("settings.log.admin-img"), "textures/") !== false) { $picture = 0; } else { $picture = 1; }
             if ($config->getNested("settings.log.admin-perms") !== false) {
                 if ($player->hasPermission($config->getNested("settings.log.admin-perms"))) {
                     $form->addButton($config->getNested("message.log.admin-delete"), $picture, $config->getNested("settings.log.admin-img"), "delete");
@@ -104,7 +104,7 @@ class ChatForm
         } else {
             $form->setContent($config->getNested("message.log.not-inlog"));
         }
-        if ($config->getNested("settings.log.okay-img") !== false and strpos($config->getNested("settings.log.okay-img"), "textures/") !== false) { $picture = 0; } else { $picture = 1; }
+        if ($config->getNested("settings.log.okay-img") !== false && strpos($config->getNested("settings.log.okay-img"), "textures/") !== false) { $picture = 0; } else { $picture = 1; }
         $form->addButton($config->getNested("message.log.okay"), $picture, $config->getNested("settings.log.okay-img"), "okay");
         $player->sendForm($form);
         return $form;
