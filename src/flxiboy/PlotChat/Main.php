@@ -13,20 +13,19 @@ use pocketmine\utils\Config;
  */
 class Main extends PluginBase
 {
-
     /**
-     * @var self
+     * @var Main
      */
-    protected static Main $instance;
+    public static Main $instance;
     /**
      * @var array
      */
-    public $playerchat = [];
+    public array $playerchat = [];
 
     /**
      * Enable function: registering Command
      */
-    public function onEnable()
+    public function onEnable(): void
     {
         self::$instance = $this;
         $this->reloadConfig();
@@ -35,9 +34,9 @@ class Main extends PluginBase
     }
 
     /**
-     * @return self
+     * @return Main
      */
-    public static function getInstance(): self
+    public static function getInstance(): Main
     {
         return self::$instance;
     }
@@ -47,6 +46,6 @@ class Main extends PluginBase
      */
     public function getLog(): Config
     {
-        return new Config(self::$instance->getDataFolder() . "log.yml", Config::YAML);
+        return new Config(Main::getInstance()->getDataFolder() . "log.yml", Config::YAML);
     }
 }

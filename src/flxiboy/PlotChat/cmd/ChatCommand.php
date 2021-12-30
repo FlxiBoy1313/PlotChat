@@ -3,7 +3,7 @@
 namespace flxiboy\PlotChat\cmd;
 
 use pocketmine\command\CommandSender;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use flxiboy\PlotChat\Main;
 use MyPlot\forms\MyPlotForm;
 use MyPlot\MyPlot;
@@ -18,7 +18,7 @@ use flxiboy\PlotChat\api\ChatAPI;
 class ChatCommand extends SubCommand
 {
 
-	public function __construct() 
+    public function __construct()
     {
         parent::__construct(MyPlot::getInstance(), $this->getName());
     }
@@ -42,8 +42,8 @@ class ChatCommand extends SubCommand
     }
 
     /**
-	 * @param CommandSender $player
-	 */
+     * @param CommandSender $player
+     */
     public function canUse(CommandSender $player): bool
     {
         return $player instanceof Player;
@@ -52,21 +52,21 @@ class ChatCommand extends SubCommand
     /**
      * @param Player $player
      */
-	public function getForm(?Player $player = null) : ?MyPlotForm 
+    public function getForm(?Player $player = null) : ?MyPlotForm
     {
-		return null;
-	}
-    
+        return null;
+    }
+
     /**
-	 * @param CommandSender $player
-	 * @param string[] $args
+     * @param CommandSender $player
+     * @param string[] $args
      * @return bool
-	 */
+     */
     public function execute(CommandSender $player, array $args): bool
     {
         if ($player instanceof Player) {
             $config = Main::getInstance()->getConfig();
-            $plot = MyPlot::getInstance()->getPlotByPosition($player);
+            $plot = MyPlot::getInstance()->getPlotByPosition($player->getPosition());
             $form= new ChatForm();
             $api = new ChatAPI();
             if ($config->getNested("settings.world.enable") == true) {
@@ -86,7 +86,7 @@ class ChatCommand extends SubCommand
                     }
                 }
             } else {
-                if (!MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+                if (!MyPlot::getInstance()->isLevelLoaded($player->getWorld()->getFolderName())) {
                     $player->sendMessage($config->getNested("message.prefix") . $config->getNested("message.cmd.no-world"));
                     return true;
                 }

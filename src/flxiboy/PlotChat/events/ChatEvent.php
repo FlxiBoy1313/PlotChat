@@ -28,13 +28,13 @@ class ChatEvent implements Listener
             if ($config->getNested("settings.world.enable") == true) {
                 foreach ($config->getNested("settings.world.worlds") as $worlds) {
                     if (MyPlot::getInstance()->isLevelLoaded($worlds)) {
-                        $event->setCancelled();
+                        $event->cancel();
                         if (empty($message)) {
                             if ($message !== null) {
                                 if ($config->getNested("settings.chat.color-chat") == false and strpos($message, "§") !== false) {
                                     foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                                         $message = str_replace("§" . $colors, "", $message);
-                                    } 
+                                    }
                                 }
                                 $chat->sendChat($player, $message);
                             }
@@ -44,13 +44,13 @@ class ChatEvent implements Listener
                     }
                 }
             } else {
-                $event->setCancelled();
-                if (MyPlot::getInstance()->isLevelLoaded($player->getLevelNonNull()->getFolderName())) {
+                $event->cancel();
+                if (MyPlot::getInstance()->isLevelLoaded($player->getWorld()->getFolderName())) {
                     if ($message !== null) {
                         if ($config->getNested("settings.chat.color-chat") == false and strpos($message, "§") !== false) {
                             foreach ($config->getNested("settings.chat.color-chat-block") as $colors) {
                                 $message = str_replace("§" . $colors, "", $message);
-                            } 
+                            }
                         }
                         $chat->sendChat($player, $message);
                     }
@@ -61,4 +61,3 @@ class ChatEvent implements Listener
         }
     }
 }
-

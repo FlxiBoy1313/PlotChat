@@ -1,6 +1,6 @@
 name: PlotChat
-version: 2.3
-api: 3.9.0
+version: 3.0.0
+api: 4.0.0
 author: FlxiBoy
 main: flxiboy\PlotChat\Main
 depend:

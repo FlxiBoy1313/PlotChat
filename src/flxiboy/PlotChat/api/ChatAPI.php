@@ -5,7 +5,7 @@ namespace flxiboy\PlotChat\api;
 use flxiboy\PlotChat\Main;
 use MyPlot\MyPlot;
 use pocketmine\Server;
-use pocketmine\Player;
+use pocketmine\player\Player;
 
 /**
  * Class ChatAPI
@@ -15,23 +15,24 @@ class ChatAPI
 {
 
     /**
-	 * @param Player $player
-	 * @param string $message
-	 */
+     * @param Player $player
+     * @param string $message
+     * @return bool
+     */
     public function sendChat(Player $player, string $message): bool
     {
         $config = Main::getInstance()->getConfig();
         $log = Main::getInstance()->getLog();
-        $plot = MyPlot::getInstance()->getPlotByPosition($player);
+        $plot = MyPlot::getInstance()->getPlotByPosition($player->getPosition());
         $date = new \DateTime('now');
         if ($plot !== null) {
             if (!empty($message)) {
-                $logsave = $log->getNested($player->getLevel()->getFolderName() . "." . $plot->X . ";" . $plot->Z, []);
+                $logsave = $log->getNested($player->getWorld()->getFolderName() . "." . $plot->X . ";" . $plot->Z, []);
                 $logsave[] = $date->format("Y:m:d:H:i:s") . ":" . $player->getName() . ":" . $message;
-                $log->setNested($player->getLevel()->getFolderName() . "." . $plot->X . ";" . $plot->Z, $logsave);
+                $log->setNested($player->getWorld()->getFolderName() . "." . $plot->X . ";" . $plot->Z, $logsave);
                 $log->save();
                 foreach (Server::getInstance()->getOnlinePlayers() as $players) {
-                    $plotx = MyPlot::getInstance()->getPlotByPosition($players);
+                    $plotx = MyPlot::getInstance()->getPlotByPosition($players->getPosition());
                     $msg = $config->getNested("message.cmd.chat-msg");
                     $msg = str_replace("%x%", $plot->X, $msg);
                     $msg = str_replace("%z%", $plot->Z, $msg);
@@ -58,7 +59,7 @@ class ChatAPI
                                     $players->sendMessage($config->getNested("settings.see-chat.msg") . $msg);
                                 }
                             }
-                        } 
+                        }
                     }
                 }
             } else {

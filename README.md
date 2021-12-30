@@ -1,4 +1,4 @@
-# Chat addon for MyPlot v2.3
+# Chat addon for MyPlot v3.0
 This is a Plot chat addon for MyPlot.
 You can all funktion edit in **config.yml**
 
@@ -8,7 +8,7 @@ You can all funktion edit in **config.yml**
 |/p chat <message, on-off, log>|Send a message in the PlotChat|
 
 ### Feature
-- [X] Command
+- [X] PM4-Support
 - [X] Message and Command edit in config
 - [X] See message on perms or player list
 - [X] Ui support

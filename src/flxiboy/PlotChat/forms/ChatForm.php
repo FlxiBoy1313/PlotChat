@@ -5,14 +5,14 @@ namespace flxiboy\PlotChat\forms;
 use jojoe77777\FormAPI\CustomForm;
 use jojoe77777\FormAPI\SimpleForm;
 use flxiboy\PlotChat\api\ChatAPI;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use flxiboy\PlotChat\Main;
 
 /**
  * Class ChatForm
  * @package flxiboy\PlotChat\forms
  */
-class ChatForm 
+class ChatForm
 {
 
     /**
@@ -53,7 +53,7 @@ class ChatForm
      * @param string $plotz
      * @return SimpleForm
      */
-    public function getChatLog(Player $player, string $plotx, string $plotz): SimpleForm 
+    public function getChatLog(Player $player, string $plotx, string $plotz): SimpleForm
     {
         $config = Main::getInstance()->getConfig();
         $log = Main::getInstance()->getLog();
@@ -68,16 +68,16 @@ class ChatForm
                     $msg = str_replace("%x%", $plotx, $msg);
                     $msg = str_replace("%z%", $plotz, $msg);
                     $player->sendMessage($config->getNested("message.prefix") . $msg);
-                    $log->removeNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz);
+                    $log->removeNested($player->getWorld()->getFolderName() . "." . $plotx . ";" . $plotz);
                     $log->save();
                     break;
             }
             return true;
         });
         $form->setTitle($config->getNested("message.log.title"));
-        if ($log->getNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz)) {
+        if ($log->getNested($player->getWorld()->getFolderName() . "." . $plotx . ";" . $plotz)) {
             $list = [];
-            foreach ($log->getNested($player->getLevel()->getFolderName() . "." . $plotx . ";" . $plotz) as $plot) {
+            foreach ($log->getNested($player->getWorld()->getFolderName() . "." . $plotx . ";" . $plotz) as $plot) {
                 $plots = explode(":", $plot);
                 $format = $config->getNested("message.log.format");
                 $format = str_replace("%year%", $plots[0], $format);
