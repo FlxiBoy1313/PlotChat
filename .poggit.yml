@@ -2,12 +2,8 @@
 build-by-default: true
 branches:
 - main
-- PM4
 projects:
   PlotChat:
     path: ""
     php: 8.0
-    libs:
-      - src: jojoe77777/FormAPI/libFormAPI
-        version: ^1.3
 ...
