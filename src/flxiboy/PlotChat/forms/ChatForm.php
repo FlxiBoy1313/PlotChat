@@ -2,8 +2,8 @@
 
 namespace flxiboy\PlotChat\forms;
 
-use jojoe77777\FormAPI\CustomForm;
-use jojoe77777\FormAPI\SimpleForm;
+use Vecnavium\FormsUI\CustomForm;
+use Vecnavium\FormsUI\SimpleForm;
 use flxiboy\PlotChat\api\ChatAPI;
 use pocketmine\player\Player;
 use flxiboy\PlotChat\Main;
